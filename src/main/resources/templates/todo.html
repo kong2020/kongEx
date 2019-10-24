@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<title>스프링부트 +Jpa+Thymeleaf예제</title>
+</head>
+
+<body>
+	<form>
+        <div>
+            <label>TODO 내용 </label>
+            <textarea id="contents" placeholder="내용을 입력하세요"></textarea>
+        </div>
+        <div>
+            <label>완료여부</label>
+            <input type="text" id="isDone" placeholder="작성자를 입력하세요">
+        </div>
+    </form>
+    <div>
+		<button type="button">취소</button>
+        <button type="button" id="btn-save">등록</button>
+    </div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>    
+    <script src="/js/app/main.js"></script>
+</body>
+</html>

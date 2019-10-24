@@ -1,0 +1,26 @@
+server:
+  port: 8099  # Spring boot Server port
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver  #h2 드라이버 설정
+    url: jdbc:h2:file:~/test_db;AUTO_SERVER=TRUE  #접속 URL
+    #url: jdbc:h2:mem:testdb
+    username: sa  # 사용자 이름 (로그인 시 사용)
+    password:
+
+  h2:
+    #console.enabled: true
+    console:
+      enabled: true  # H2 웹 콘솔을 사용하겠다는 의미
+      path: /h2-console  # 콘솔의 경로
+     
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties.hibernate.hbm2ddl.auto: update
+    showSql: true
+    
+  thymeleaf:
+    prefix: classpath:templates/
+    #prefix: src/main/resources/templates
+    suffix: .html  
