@@ -47,10 +47,10 @@ var main = {
         	
         	console.log("확인:", "id=", id, "contents=", contents, "done=", done, "modifiedDate=", modifiedDate);
         	var text = "";
-        	text += "<tr><td><input type='checkbox' id='checkbox'></td>";
+        	text += "<tr><td><input type='checkbox' name='chkbox'></td>";
         	text += "<td>" + id + "</td>";
         	text += "<td>" + contents + "</td>";
-        	text += "<td>" + done + "</td>";
+        	text += "<td>" + (done ? "완료" : "미완료") + "</td>";
         	text += "<td>" + modifiedDate + "</td>";
         	text += "<td class='del'><a href='#'>삭제</a></td>";
         	text += "</tr>";

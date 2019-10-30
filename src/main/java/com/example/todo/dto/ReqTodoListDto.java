@@ -17,13 +17,19 @@ public class ReqTodoListDto {
   private String done;
 
   @Builder
-  public ReqTodoListDto(String contents, String done) {
-      this.contents = contents;
-      this.done = done;
+  public ReqTodoListDto(Long id, String contents, String done) {
+    this.id = id;
+    this.contents = contents;
+    this.done = done;
   }
-  
+
   public TodoList toEntity() {
-	boolean xxx = "y".equalsIgnoreCase(done) ? true : false;  
+    boolean xxx = "y".equalsIgnoreCase(done) ? true : false;
     return TodoList.builder().contents(contents).done(xxx).build();
+  }
+
+  public TodoList toEntityForUpdate() {
+    boolean xxx = "y".equalsIgnoreCase(done) ? true : false;
+    return TodoList.builder().id(id).contents(contents).done(xxx).build();
   }
 }

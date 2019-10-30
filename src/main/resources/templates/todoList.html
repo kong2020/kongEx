@@ -3,19 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <title>스프링부트 +Jpa+Thymeleaf예제</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 
 <body>
 	<form>
         <div>
-            <label>TODO 내용 </label>
-            <textarea id="contents" placeholder="내용을 입력하세요"></textarea>
+            <label>할 일:</label>
+            <textarea id="contents" placeholder="내용을 입력하세요"></textarea> <button type="button" id="btn-save">등록</button>
         </div>
     </form>
-    <div>
-		<button type="button">취소</button>
-        <button type="button" id="btn-save">등록</button>
-    </div>
+    
     &nbsp;
 	<table id="table" cellspacing="0" cellpadding="10" border="1">
 		<thead>
@@ -30,21 +28,151 @@
 		</thead>
 		<tbody id="tbody">
 			<tr th:each="todo : ${todoList}">
-				<td><input type="checkbox" id="checkbox"></td>
+				<td>
+					<input type="checkbox" name="chkbox" th:checked="${todo.done}">
+				</td>
 				<td th:text="${todo.id}">등록번호</td>
-				<td th:text="${todo.contents}">할일</td>
+				<td><a href="#" th:text="${todo.contents}"></a></td>
 				<td th:text="${todo.done ? '완료' : '미완료'}">완료여부</td>
-				<td th:text="${todo.modifiedDate}">수정일시</td>
+				<!-- <td th:text="${todo.modifiedDate}">수정일시</td> -->
+				<td th:text="${#temporals.format(todo.modifiedDate, 'yyyy-MM-dd | HH:mm:ss')}">수정일시</td>
 				<td class="del"><a href="#">삭제</a></td>
 			</tr>
 		</tbody>
 	</table>
+	
+	<nav style="text-align: center;">
+    <ul class="pagination"
+        th:with="start=${T(Math).floor(todoList.number/10)*10 + 1},
+                 last=(${start + 9 < todoList.totalPages ? start + 9 : todoList.totalPages})">
+        		 <!-- 페이지 내비에서 처음페이지번호와 끝페이지번호를 구한다  -->         
+        <li>
+            <a th:href="@{/todoListPage(page=1)}" aria-label="First">
+                <span aria-hidden="true">처음</span>
+            </a>
+        </li>
+
+        <li th:class="${todoList.first} ? 'disabled'">
+            <a th:href="${todoList.first} ? '#' :@{/todoListPage(page=${todoList.number})}" aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+		
+		<!-- 현재 페이지 그룹의 페이지 나열  -->
+        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == todoList.number + 1} ? 'active'">
+            <a th:text="${page}" th:href="@{/todoListPage(page=${page})}"></a>
+        </li>
+
+        <li th:class="${todoList.last} ? 'disabled'">
+            <a th:href="${todoList.last} ? '#' : @{/todoListPage(page=${todoList.number + 2})}" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+
+        <li>
+            <a th:href="@{/todoListPage(page=${todoList.totalPages})}" aria-label="Last">
+                <span aria-hidden="true">끝</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 </body>
 
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="/js/app/main.js"></script>
 
 <script type="text/javascript">
+	
+	$(document).on("click", "#tbody a", (function() {
+		var cont_text = $(this).text();
+		
+		var td = $(this).closest('td');
+		$(td).html("<input type='text' value='" + cont_text 
+			+ "' size='35' /> <button id='edit'>수정</button>");
+	}));
+	
+	$(document).on("click", "#edit", (function() {
+		var edited_text = $(this).closest('td').find('input').val();
+		var position = $(this).closest('td').find('a');
+		var td = $(this).closest('tr').children();
+		
+		var row = new Object();
+		row.id = td.eq(1).text();
+		row.contents = edited_text;
+		row.td = td.eq(2);
+		row.done = td.eq(3).text() == "완료" ? "y" : "n";
+		row.position = position;
+		
+		console.log("row object=", row.id, row.contents, row.done);
+		
+		ajax_update_call(row);
+		
+		
+	}));
+	
+	function ajax_update_call(row) {
+		var data = {
+				id : row.id,
+				contents : row.contents,
+				done : row.done
+			}
+		
+		$.ajax({
+			type : 'PUT',
+			url : '/todoUpdate',
+			dataType : 'json',
+			contentType : 'application/json; charset=utf-8',
+			data: JSON.stringify(data),
+			success : function(result){
+				console.log("result=", result);
+				//(row.position).text(row.contents);
+				
+				$(row.td).html("<a href='#'>" + row.contents + "</a>");
+			},  
+			fail : function (error){
+				console.log("error=", error);
+			} 
+		});
+	}
+	
+	$(document).on("click", "input:checkbox", (function() {
+		var $this = $(this);
+		console.log("$this=", $this);
+		
+		var sel_id;
+		var sel_contents;
+		if($this.is(":checked") == true) {
+			sel_id = $this.parent("td").siblings().eq(0).text();
+			sel_contents = $this.parent("td").siblings().eq(1).text();
+		} else {
+			return false;
+		}
+		
+		var data = {
+			id : sel_id,
+			contents : sel_contents,
+			done : "y"
+		}
+		
+		$.ajax({
+			type : 'PUT',
+			url : '/todoUpdate',
+			dataType : 'json',
+			contentType : 'application/json; charset=utf-8',
+			data: JSON.stringify(data),
+			success : function(result){
+				console.log("result=", result);
+				
+				//$this.prop("checked", true);
+				$this.parent("td").siblings().eq(0).attr("checked", true);
+				$this.parent("td").siblings().eq(2).text("완료");
+			},  
+			fail : function (error){
+				console.log("error=", error);
+			} 
+		});
+	}));
+
 
 	$(document).on("click", ".del", (function() {
 		var $this = $(this);

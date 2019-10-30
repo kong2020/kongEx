@@ -52,4 +52,24 @@ public class TodoListService2 {
     todoListRepository2.deleteById(dto.getId());
     return dto.getId();
   }
+  
+  public Long delete(Long id) {
+	    todoListRepository2.deleteById(id);
+	    return id;
+  }
+  
+  @Transactional
+  public ResTodoListDto2 update(ReqTodoListDto dto) {
+    // 수정
+    todoListRepository2.save(dto.toEntityForUpdate());
+
+    // 조회
+    Optional<TodoList> todolist = todoListRepository2.findById(dto.getId());
+    if(todolist.isPresent()) {
+    	TodoList xxx = todolist.get();
+    	return new ResTodoListDto2(xxx.getId(), xxx.getContents(), xxx.isDone(), xxx.getModifiedDate());
+    } else {
+    	return null;
+    }
+  }
 }

@@ -32,7 +32,8 @@ public class TodoList extends BaseTimeEntity {
   private boolean done;
 
   @Builder
-  public TodoList(String contents, boolean done) {
+  public TodoList(Long id, String contents, boolean done) {
+    this.id = id;
     this.contents = contents;
     this.done = done;
   }
