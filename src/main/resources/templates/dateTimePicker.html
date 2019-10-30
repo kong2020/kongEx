@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+        <meta charset="UTF-8">
+        <title>datetimepicker test</title>
+        <link rel="stylesheet" type="text/css" media="screen" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+        <link href="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/build/css/bootstrap-datetimepicker.css"        rel="stylesheet">
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+        <script src="http://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/e8bddc60e73c1ec2475f827be36e1957af72e2ea/src/js/bootstrap-datetimepicker.js"></script>
+</head>
+<body>
+<div class="container">
+<div>
+        <div>
+                <h2>Default View Mode</h2>
+        </div>
+    <div class='col-md-5'>
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker1'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-5'>
+        <div class="form-group">
+            <div class='input-group date' id='datetimepicker2'>
+                <input type='text' class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <input type="button" width="40px;" value="오늘" onclick="changeDate1(1)" />
+        <input type="button" width="40px;" value="1주" onclick="changeDate1(2)" />
+        <input type="button" width="40px;" value="1개월" onclick="changeDate1(3)" />
+        <input type="button" width="40px;" value="3개월" onclick="changeDate1(4)" />
+        <input type="button" width="40px;" value="6개월" onclick="changeDate1(5)" />
+</div>
+<br/>
+<br/>
+    
+<div>
+        <h2>Month View Mode</h2>
+</div>
+        
+                <div class='col-md-5'>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker3'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class='col-md-5'>
+                <div class="form-group">
+                    <div class='input-group date' id='datetimepicker4'>
+                        <input type='text' class="form-control" />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+                 <div class='col-md-5'>
+                <input type="button" width="40px;" value="1개월" onclick="changeDate2(1)" />
+                <input type="button" width="40px;" value="3개월" onclick="changeDate2(2)" />
+                <input type="button" width="40px;" value="6개월" onclick="changeDate2(3)" />
+        </div>
+        <script type="text/javascript">
+                $(function () {
+                     $('#datetimepicker1').datetimepicker({
+                             format: 'YYYY.MM.DD'
+                             ,useCurrent: false
+                     });
+                    $('#datetimepicker2').datetimepicker({
+                        format: 'YYYY.MM.DD'
+                        ,useCurrent: false
+                    });
+                    $("#datetimepicker1").on("dp.change", function (e) {
+                        $('#datetimepicker2').data("DateTimePicker").minDate(e.date);
+                    });
+                    $("#datetimepicker2").on("dp.change", function (e) {
+                        $('#datetimepicker1').data("DateTimePicker").maxDate(e.date);
+                    });
+                    
+                    $('#datetimepicker3').datetimepicker({
+                        format: 'YYYY.MM'
+                        ,useCurrent: false
+                    });
+                    $('#datetimepicker4').datetimepicker({
+                        format: 'YYYY.MM'
+                        ,useCurrent: false
+                    });
+                    $("#datetimepicker3").on("dp.change", function (e) {
+                        $('#datetimepicker4').data("DateTimePicker").minDate(e.date);
+                    });
+                    $("#datetimepicker4").on("dp.change", function (e) {
+                        $('#datetimepicker3').data("DateTimePicker").maxDate(e.date);
+                    });
+                });                
+                
+                        function changeDate1(opt){
+                                var today = moment().add(0, 'days');
+                                //오늘날짜 적용
+                                $('#datetimepicker2').data("DateTimePicker").date(today);
+                                
+                                var date = moment().add(6, 'month');
+                                //max선택값 초기화
+                                $('#datetimepicker1').data("DateTimePicker").maxDate(date);
+                                $('#datetimepicker2').data("DateTimePicker").maxDate(date);
+
+                                if(opt == 1){
+                                        date = moment().add(0, 'days');                                        
+                                }else{
+                                        if(opt == 2){
+                                        date = moment().add(-7, 'days');
+                                        }else if(opt == 3){
+                                        date = moment().add(-1, 'month');
+                                        }else if(opt == 4){
+                                        date = moment().add(-3, 'month');
+                                        }else if(opt == 5){
+                                        date = moment().add(-6, 'month');
+                                        }
+                                }
+                                //선택 날짜 적용
+                                $('#datetimepicker1').data("DateTimePicker").date(date);
+                                $('#datetimepicker1').data("DateTimePicker").maxDate(today);
+                                $('#datetimepicker2').data("DateTimePicker").minDate(today);
+                        }
+                
+                        function changeDate2(opt){
+                        var today = moment().add(0, 'days');
+                        $('#datetimepicker4').data("DateTimePicker").date(today);
+                        var date = moment().add(6, 'month');
+                        //max선택값 초기화
+                                $('#datetimepicker3').data("DateTimePicker").maxDate(date);
+                                $('#datetimepicker4').data("DateTimePicker").maxDate(date);
+                        
+                        if(opt == 1){
+                                date = moment().add(-1, 'month');
+                        }else if(opt == 2){
+                                date = moment().add(-3, 'month');
+                        }else if(opt == 3){
+                                date = moment().add(-6, 'month');
+                        }
+                        //선택 날짜 적용
+                        $('#datetimepicker3').data("DateTimePicker").date(date);
+                                $('#datetimepicker3').data("DateTimePicker").maxDate(today);
+                                $('#datetimepicker4').data("DateTimePicker").minDate(today);
+                        }
+       </script>
+</div>       
+</body>
+</html>

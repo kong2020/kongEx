@@ -46,6 +46,7 @@
         th:with="start=${T(Math).floor(todoList.number/10)*10 + 1},
                  last=(${start + 9 < todoList.totalPages ? start + 9 : todoList.totalPages})">
         		 <!-- 페이지 내비에서 처음페이지번호와 끝페이지번호를 구한다  -->         
+        		 <!-- todoList.number는 현재 페이지index임(0 부터 시작)  -->         
         <li>
             <a th:href="@{/todoListPage(page=1)}" aria-label="First">
                 <span aria-hidden="true">처음</span>

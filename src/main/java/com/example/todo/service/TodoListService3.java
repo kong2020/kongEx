@@ -31,7 +31,8 @@ public class TodoListService3 {
 
     Page<TodoList> todoList = todoListRepository3.findAll(pageable);
     
-    log.info("총 element 수 : {}, 전체 page 수 : {}, 페이지에 표시할 element 수 : {}, 현재 페이지 index : {}, 현재 페이지의 element 수 : {}",
+    log.info("총 element 수 : {}, 전체 page 수 : {}, 페이지에 표시할 element 수 : {},"
+        + " 현재 페이지 index : {}, 현재 페이지의 element 수 : {}",
     		todoList.getTotalElements(), todoList.getTotalPages(), todoList.getSize(),
     		todoList.getNumber(), todoList.getNumberOfElements());
     
