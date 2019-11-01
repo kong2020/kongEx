@@ -10,12 +10,13 @@
 	<form>
         <div>
             <label>할 일:</label>
-            <textarea id="contents" placeholder="내용을 입력하세요"></textarea> <button type="button" id="btn-save">등록</button>
+            <textarea id="contents" placeholder="내용을 입력하세요"></textarea>
+            <button type="button" id="btn-save">등록</button>
         </div>
     </form>
     
     &nbsp;
-	<table id="table" cellspacing="0" cellpadding="10" border="1">
+	<table id="table" cellspacing="0" cellpadding="10" border="1" width="45%" >
 		<thead>
 			<tr>
 				<th>&nbsp;</th>
@@ -36,7 +37,9 @@
 				<td th:text="${todo.done ? '완료' : '미완료'}">완료여부</td>
 				<!-- <td th:text="${todo.modifiedDate}">수정일시</td> -->
 				<td th:text="${#temporals.format(todo.modifiedDate, 'yyyy-MM-dd | HH:mm:ss')}">수정일시</td>
-				<td class="del"><a href="#">삭제</a></td>
+				<td class="del">
+					<a href="#">삭제</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>
@@ -76,7 +79,7 @@
             </a>
         </li>
     </ul>
-</nav>
+	</nav>
 </body>
 
 <script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

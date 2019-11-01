@@ -3,19 +3,26 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">     
 <title>스프링부트 +Jpa+Thymeleaf예제</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
 </head>
 
 <body>
 	<form action="#" th:action="@{/todo2}" th:object="${ReqTodoListDto}" method="post">
         <div>
-            <label>할 일:</label>
-            <input type="text" id="contents" placeholder="내용을 입력하세요" name="contents" />
-            <!-- <input type="submit" value="submit" /> -->
+        	<p>
+            	<label>할 일:</label>
+            	<input type="text" id="contents" name="contents" placeholder="내용을 입력하세요" size="60" >
+            </p>
+            <p>
+            	<label>완료여부</label>
+            	<input type="text" id="xxxxx" name="xxxxxx">
+            </p>
+            <button type="submit">등록</button>
         </div>
     </form>
         
     &nbsp;
-	<table id="table" cellspacing="0" cellpadding="10" border="1">
+	<table id="table" cellspacing="0" cellpadding="10" border="1" width="45%" >
 		<thead>
 			<tr>
 				<th>&nbsp;</th>
@@ -24,23 +31,64 @@
 				<th>완료여부</th>
 				<th>수정일시</th>
 				<th>&nbsp;</th>
+				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody id="tbody">
 			<tr th:each="todo : ${todoList}">
 				<td>
-					<input type="checkbox" name="chkbox" th:checked="${todo.done}">
+					<input type="checkbox" name="chkbox" th:checked="${todo.done}" >
 				</td>
 				<td th:text="${todo.id}">등록번호</td>
 				<td><a href="#" th:text="${todo.contents}"></a></td>
 				<td th:text="${todo.done ? '완료' : '미완료'}">완료여부</td>
-				<td th:text="${todo.modifiedDate}">수정일시</td>
+				<td th:text="${#temporals.format(todo.modifiedDate, 'yyyy-MM-dd | HH:mm:ss')}">수정일시</td>
 				<td class="del">
 					<a th:href="@{/todoDelete2(id=${todo.id})}" >삭제</a>
+				</td>
+				<td>
+					<a href="#">수정</a>
 				</td>
 			</tr>
 		</tbody>
 	</table>
-</body>
+	
+	<nav style="text-align: center;">
+    <ul class="pagination"
+        th:with="start=${T(Math).floor(todoList.number/10)*10 + 1},
+                 last=(${start + 9 < todoList.totalPages ? start + 9 : todoList.totalPages})">
+        		 <!-- 페이지 내비에서 처음페이지번호와 끝페이지번호를 구한다  -->         
+        		 <!-- todoList.number는 현재 페이지index임(0 부터 시작)  -->         
+        <li>
+            <a th:href="@{/todoList2(page=1)}" aria-label="First">
+                <span aria-hidden="true">처음</span>
+            </a>
+        </li>
 
+        <li th:class="${todoList.first} ? 'disabled'">
+            <a th:href="${todoList.first} ? '#' :@{/todoList2(page=${todoList.number})}" aria-label="Previous">
+                <span aria-hidden="true">&lt;</span>
+            </a>
+        </li>
+		
+		<!-- 현재 페이지 그룹의 페이지 나열  -->
+        <li th:each="page: ${#numbers.sequence(start, last)}" th:class="${page == todoList.number + 1} ? 'active'">
+            <a th:text="${page}" th:href="@{/todoList2(page=${page})}"></a>
+        </li>
+
+        <li th:class="${todoList.last} ? 'disabled'">
+            <a th:href="${todoList.last} ? '#' : @{/todoList2(page=${todoList.number + 2})}" aria-label="Next">
+                <span aria-hidden="true">&gt;</span>
+            </a>
+        </li>
+
+        <li>
+            <a th:href="@{/todoList2(page=${todoList.totalPages})}" aria-label="Last">
+                <span aria-hidden="true">끝</span>
+            </a>
+        </li>
+    </ul>
+	</nav>
+	
+</body>
 </html>

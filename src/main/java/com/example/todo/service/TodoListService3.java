@@ -27,7 +27,7 @@ public class TodoListService3 {
             ? 0
             : (pageable.getPageNumber() - 1); // page는 index 처럼 0부터 시작
     
-    pageable = PageRequest.of(page, 10, new Sort(Sort.Direction.DESC, "id"));
+    pageable = PageRequest.of(page, 20, new Sort(Sort.Direction.DESC, "id"));
 
     Page<TodoList> todoList = todoListRepository3.findAll(pageable);
     

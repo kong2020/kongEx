@@ -67,8 +67,9 @@ public class TodoListController {
   
   //ajax사용하지 않는 순수 버전
   @GetMapping("/todoList2")
-  public ModelAndView getTodoList2(ModelAndView model) {
-	  model.addObject("todoList", todoListService2.findAllDesc());
+//  public ModelAndView getTodoList2(ModelAndView model) {
+	public ModelAndView getTodoList2(@PageableDefault Pageable pageable, ModelAndView model) {
+	  model.addObject("todoList", todoListService3.findAll(pageable));
 	  model.setViewName("todoList2");
       return model;
   }
